@@ -64,8 +64,9 @@
             targetHeight: 1200,
             saveToPhotoAlbum: false
           }, function(ret, err){
-              api.showProgress();//显示加载进度框
+
               if (ret) {
+                api.showProgress();//显示加载进度框
                 var data = {};
                 data.files = {
                         "file" : ret.data
@@ -92,9 +93,12 @@
                       $("#ul").append(li);
                       api.hideProgress(); //隐藏加载进度框
                     }else {
-                      alert(err)
+                      api.hideProgress(); //隐藏加载进度框
+                      $("#div2").show();
                     }
                 });
+              }else {
+                $("#div2").show();
               }
           });
       });
