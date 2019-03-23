@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap-theme.css">
+    <title>拍照</title>
+    <style type="text/css">
+        body {
+          color: #212121;
+          background-color: #f5f5f5;
+        }
+        #camera {
+          text-align: center; /*让div内部文字居中*/
+          background-color: #fff;
+          border-radius: 20px;
+          width: 300px;
+          height: 300px;
+          margin: auto;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
+        #bt {
+          text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="div1">
+        <img id="img"></img>
+        <ul class="list-group" id="ul"></ul>
+        <div id="bt">
+          <button class="btn btn-primary" onclick="back()">返回</button>
+        </div>
+    </div>
+    <div id="div2">
+      <img src="../image/camera.png" id="camera">
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min.js" ></script>
+<script type="text/javascript" src="../script/api.js" ></script>
+<script type="text/javascript" src="../script/bootstrap.js" ></script>
+<script type="text/javascript">
+    apiready = function () {
+      // api.setStatusBarStyle({
+      //   style: 'dark'
+      // });
+      $("#div1").hide();
+      $("#camera").click(function(){
+        $("#div2").hide();
+        api.getPicture({
+            sourceType: 'camera',
+            encodingType: 'jpg',
+            mediaValue: 'pic',
+            destinationType: 'url',
+            allowEdit: true,
+            quality: 50,
+            targetWidth: 960,
+            targetHeight: 1200,
+            saveToPhotoAlbum: false
+          }, function(ret, err){
+              api.showProgress();//显示加载进度框
+              if (ret) {
+                var data = {};
+                data.files = {
+                        "file" : ret.data
+                }
+                api.ajax({
+                    url: 'http://47.104.26.79:7808/test',
+                    method: 'post',
+                    data: data
+                },function(ret, err){
+                    if (ret) {
+                      $("#div1").show();
+                      var ss = $api.dom("img");
+                      $api.attr(ss, "src", ret.data);
+                      var li = '<li class="list-group-item active">\n' +
+                          '                <span class="pull-right ">概率</span>\n' +
+                          '                类别\n' +
+                          '            </li>';
+                      for (var i = 0; i < 8; i++) {
+
+                          li = li + '<li class="list-group-item">\n' +
+                              '                <span class="pull-right">' + ret[i].prc.toFixed(4) + '%</span>\n' +
+                              ret[i].name + '</li>';
+                      }
+                      $("#ul").append(li);
+                      api.hideProgress(); //隐藏加载进度框
+                    }else {
+                      alert(err)
+                    }
+                });
+              }
+          });
+      });
+
+    }
+
+    function back(){
+      $("#img").empty();
+      $("#ul").empty();
+      $("#div1").hide();
+      $("#div2").show();
+
+    }
+</script>
+</html>
