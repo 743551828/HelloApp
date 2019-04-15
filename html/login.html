@@ -47,17 +47,55 @@
             </ul>
         </form>
 
-        <div class="btn"><button class="login">
+        <div class="btn">
+          <button class="login" onclick="login()">
             登陆
-        </button></div>
+          </button>
+        </div>
         <div class="footer">
-            <a href="register_win.html">立即注册</a> | <a href="#">忘记密码</a>
+            <a id="register" onclick="openRegister()">立即注册</a>
         </div>
     </div>
 
 </body>
 <script type="text/javascript" src="../script/jquery.min.js"></script>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
 
+  function openRegister(){
+    api.openWin({
+        name: 'register',
+        url: './register_win.html'
+    });
+
+  }
+  function login(){
+    var username = $("#username").val();
+    var password = $("#password").val();
+    $.ajax({
+        url: "http://172.20.10.7:8080/login",
+        type: "POST",
+        data: {"phoneNumber":username,"password":password},
+        success: function (result) {
+          switch(result.code)
+          {
+            case 0:
+              alert(result.msg);
+              break;
+            case 1:
+              alert(result.msg);
+              api.openWin({
+                  name: 'index',
+                  url: './index_win.html'
+              });
+              break;
+            case 2:
+              alert(result.msg);
+              break;
+          }
+        }
+      })
+  }
+</script>
 
 </html>

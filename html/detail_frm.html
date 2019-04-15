@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        #left_image img {
+          max-width: 100%;
+          max-height: 600px;
+        }
+        #result_list{
+          padding: 3px
+        }
+    </style>
+</head>
+<body>
+  <div class="container">
+
+  <!-- <h1 id="title"></h1> -->
+  <div class="row text-center">
+      <button type="button" class="btn btn-lg btn-primary" onclick="$(&#39;#input_file&#39;).click();">选择图片</button>
+      <input type="file" class="hidden" onchange="selectImage(this)" id="input_file" accept="image/*" name="file">
+      <button type="button" class="btn btn-default btn-lg" id="detect">检 测</button>
+  </div>
+  <hr>
+  <div class="row">
+      <div id="left_image" class="col-lg-6 col-md-6 col-sm-6"></div>
+      <ul class="list-group col-lg-6 col-md-6 col-sm-6" id="result_list">
+      </ul>
+  </div>
+
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../script/jquery.min.js"></script>
+<script type="text/javascript" src="../script/bootstrap.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+      // $("#title").text(api.pageParam.name)
+      $("#detect").click(function () {
+          if ($('#input_file')[0].files.length == 0) {
+            alert("请添加图片");
+            return
+          }
+          var formData = new FormData();
+          var url = "";
+          if (api.pageParam.type=="TeaWeed") {
+            url = "http://172.20.10.7:8080/test/tea_weed"
+          }else if (api.pageParam.type=="bamboo") {
+            url = "http://172.20.10.7:8080/test/bamboo"
+          }
+          for (var i = 0; i < $('#input_file')[0].files.length; i++) {
+              formData.append('file', $('#input_file')[0].files[i]);
+          }
+          $.ajax({
+              url: url,
+              type: "POST",
+              processData: false,
+              contentType: false,
+              data: formData,
+              success: function (result) {
+                  var data = result.data;
+                  $("#result_list").empty();
+                  var li = '<li class="list-group-item btn-primary">\n' +
+                      '                <span class="pull-right ">概率</span>\n' +
+                      '                类别\n' +
+                      '            </li>';
+                  for (var key in data) {
+
+                      li = li + '<li class="list-group-item">\n' +
+                          '                <span class="pull-right">' + data[key] + '%</span>\n' +
+                          key + '</li>';
+                  }
+                  $("#result_list").append(li);
+              }
+              // ,error: function (XMLHttpRequest, textStatus, errorThrown) {
+              //     console.log("错误");
+              //     // 状态码
+              //     console.log(XMLHttpRequest.status);
+              //     // 状态
+              //     console.log(XMLHttpRequest.readyState);
+              //     // 错误信息
+              //     console.log(textStatus);
+              // }
+          })
+      });
+    };
+    function selectImage(file) {
+        $("#result_list").empty();
+        $("#left_image").find("img").remove();
+        if (!file.files) {
+            return;
+        }
+        for (var i = 0; i < file.files.length; i++) {
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                var image = new Image();
+                image.src = evt.target.result;
+                $("#left_image").append(image);
+                image.addEventListener("load", function () {
+                });
+            };
+            reader.readAsDataURL(file.files[i]);
+        }
+    };
+
+
+</script>

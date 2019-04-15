@@ -6,10 +6,18 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>Hello APP</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/register_frm.css" />
 	<style>
         .login-third {
             margin-top: 3rem;
         }
+        #get_code {
+          color: #f5f5f5
+        }
+        #login {
+          color: #f5f5f5
+        }
+
 	</style>
 </head>
 <body>
@@ -27,40 +35,81 @@
             </li>
             <li class="aui-list-item">
                 <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-border-r color-orange text-center">
+                        密码
+                    </div>
+                    <div class="aui-list-item-input aui-padded-l-10">
+                        <input type="password" placeholder="密码" id="password" >
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
                     <div class="aui-list-item-input" style="width: auto;">
                         <input type="number" pattern="^1[345678][0-9]{9}$" placeholder="输入短信验证码" id="code">
                     </div>
                     <div class="aui-list-item-label aui-margin-r-15" style="width: 6rem;">
-                        <div class="aui-btn aui-btn-info" style="width: 6rem;">获取验证码</div>
+                        <div class="aui-btn" style="width: 6rem;"  id="get_code">获取验证码</div>
                     </div>
                 </div>
             </li>
         </ul>
     </section>
     <section class="aui-content-padded">
-        <div class="aui-btn aui-btn-block aui-btn-info aui-btn-sm" tapmode>登录</div>
-    </section>
-    <section class="aui-content-padded login-third">
-        <p class="aui-font-size-12 aui-text-center aui-margin-b-15">第三方账号登录</p>
-        <div class="aui-grid" style="background: none;">
-            <div class="aui-row">
-                <div class="aui-col-xs-4">
-                    <i class="aui-iconfont aui-icon-qq"></i>
-                </div>
-                <div class="aui-col-xs-4">
-                    <i class="aui-iconfont aui-icon-wechat"></i>
-                </div>
-                <div class="aui-col-xs-4">
-                    <i class="aui-iconfont aui-icon-weibo"></i>
-                </div>
-            </div>
-        </div>
+        <div class="aui-btn aui-btn-block aui-btn-sm" tapmode  id="login">注册</div>
     </section>
 </body>
+<script type="text/javascript" src="../script/jquery.min.js"></script>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    function checkMobile(sMobile){
+        if(!(/^1[3|5|7|8][0-9]\d{4,8}$/.test(sMobile))){
+            return false;
+        }else {
+          return true;
+        }
+    }
     apiready = function(){
         api.parseTapmode();
+        $("#login").click(function(){
+          var test = checkMobile($("#mobile").val());
+          if (!test) {
+            alert("手机号格错误");
+            return null;
+          }
+          if ($("#password").val()=="") {
+            alert("密码不可为空")
+            return null;
+          }
+          var data = {
+            "phoneNumber":$("#mobile").val(),
+            "password":$("#password").val()
+          };
+          $.ajax({
+              url: "http://172.20.10.7:8080/user/register",
+              type: "POST",
+              data: data,
+              success: function (result) {
+                if(result.code==500){
+                  api.alert({
+                          title: '错误',
+                          msg: '账号已存在',
+                  });
+                  return
+                }
+                api.alert({
+                        title: '提示',
+                        msg: '注册成功',
+                });
+                api.openWin({
+                    name: 'login',
+                    url: 'login.html',
+                    slidBackEnabled:false
+                });
+              }
+            })
+        })
     };
+
 </script>
 </html>
