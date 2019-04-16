@@ -60,6 +60,7 @@
 </body>
 <script type="text/javascript" src="../script/jquery.min.js"></script>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/script/ipaddress.js"></script>
 <script type="text/javascript">
 
   function openRegister(){
@@ -73,7 +74,7 @@
     var username = $("#username").val();
     var password = $("#password").val();
     $.ajax({
-        url: "http://172.20.10.7:8080/login",
+        url: ipAddress+"login",
         type: "POST",
         data: {"phoneNumber":username,"password":password},
         success: function (result) {

@@ -46,6 +46,7 @@
 <script type="text/javascript" src="../script/jquery.min.js"></script>
 <script type="text/javascript" src="../script/bootstrap.js"></script>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/script/ipaddress.js"></script>
 <script type="text/javascript">
     apiready = function(){
       // $("#title").text(api.pageParam.name)
@@ -57,9 +58,9 @@
           var formData = new FormData();
           var url = "";
           if (api.pageParam.type=="TeaWeed") {
-            url = "http://172.20.10.7:8080/test/tea_weed"
+            url = ipAddress+"/test/tea_weed"
           }else if (api.pageParam.type=="bamboo") {
-            url = "http://172.20.10.7:8080/test/bamboo"
+            url = ipAddress+"/test/bamboo"
           }
           for (var i = 0; i < $('#input_file')[0].files.length; i++) {
               formData.append('file', $('#input_file')[0].files[i]);
