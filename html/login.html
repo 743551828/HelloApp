@@ -76,22 +76,21 @@
     $.ajax({
         url: ipAddress+"login",
         type: "POST",
-        data: {"phoneNumber":username,"password":password},
+        data: {"userName":username,"password":password},
         success: function (result) {
           switch(result.code)
           {
-            case 0:
+            case 500:
               alert(result.msg);
               break;
-            case 1:
+            case 200:
               alert(result.msg);
+              $api.setStorage("Authorization",result.data);
+              // console.log($api.getStorage("Authorization"));
               api.openWin({
                   name: 'index',
                   url: './index_win.html'
               });
-              break;
-            case 2:
-              alert(result.msg);
               break;
           }
         }

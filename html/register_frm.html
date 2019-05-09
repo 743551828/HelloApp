@@ -82,19 +82,23 @@
             alert("密码不可为空")
             return null;
           }
+          var role_id_List = new Array();
+          role_id_List[0] = 2;
           var data = {
             "phoneNumber":$("#mobile").val(),
-            "password":$("#password").val()
+            "password":$("#password").val(),
+            "role_id_List":role_id_List
           };
           $.ajax({
               url: ipAddress+"user/register",
               type: "POST",
               data: data,
+              traditional: true,
               success: function (result) {
                 if(result.code==500){
                   api.alert({
                           title: '错误',
-                          msg: '账号已存在',
+                          msg: result.msg,
                   });
                   return
                 }
