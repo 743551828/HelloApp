@@ -41,10 +41,10 @@
       <div id="left_image" class="col-lg-6 col-md-6 col-sm-6"></div>
       <ul class="list-group col-lg-6 col-md-6 col-sm-6" id="result_list">
       </ul>
-      <div class="text-center" style="display:none;" id = "feedBack_div">
+      <!-- <div class="text-center" style="display:none;" id = "feedBack_div">
         <input type="text" class="form-control" name="input_result" placeholder="若检测结果有误，请反馈">
         <button type="button" class="btn btn-default" id = "feedBack" >反馈提交</button>
-      </div>
+      </div> -->
   </div>
 
 </div>
@@ -57,7 +57,7 @@
 <script type="text/javascript">
     apiready = function(){
       // $("#title").text(api.pageParam.name)
-      var saved_file_database_id = "";
+      // var saved_file_database_id = "";
       $("#detect").click(function () {
           if ($('#input_file')[0].files.length == 0) {
             alert("请添加图片");
@@ -83,17 +83,16 @@
               success: function (result) {
                 if (result.code == 200) {
                   var data = result.data.test_result;
-                  saved_file_database_id = result.data.saved_file_database_id;
+                  // saved_file_database_id = result.data.saved_file_database_id;
                   $("#result_list").empty();
                   var li = '<li class="list-group-item btn-primary">\n' +
                       '                <span class="pull-right ">概率</span>\n' +
                       '                类别\n' +
                       '            </li>';
-                  for (var key in data) {
-
+                  for (var i = 0;i<data.length;i++) {
                       li = li + '<li class="list-group-item">\n' +
-                          '                <span class="pull-right">' + data[key] + '%</span>\n' +
-                          key + '</li>';
+                          '                <span class="pull-right">' + data[i][""+Object.keys(data[i])] + '%</span>\n' +
+                          Object.keys(data[i]) + '</li>';
                   }
                   $("#result_list").append(li);
                   $("#feedBack_div").css("display","block");
@@ -112,28 +111,25 @@
               // }
           })
       });
-      $("#feedBack").click(function () {
-        var input_result = $("input[name = 'input_result']").val();
-        var formData = new FormData();
-        formData.append("_method","PUT");
-        formData.append("id",saved_file_database_id);
-        formData.append("input_result",input_result);
-        $.ajax({
-            url: ipAddress + "/file/update_input_result",
-            type: "POST",
-            headers:{"Authorization":$api.getStorage("Authorization")},
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (result) {
-              if (result.code == 200) {
-                alert("提交成功");
-              }else {
-                alert(result.msg)
-              }
-            }
-          })
-      })
+      // $("#feedBack").click(function () {
+      //   console.log($("input[name = 'input_result']").val());
+      //   var input_result = $("input[name = 'input_result']").val();
+      //   console.log($("input[name = 'input_result']").val());
+      //   console.log("saved_file_database_id="+saved_file_database_id);
+      //   var formData = new FormData();
+      //   formData.append("_method","PUT");
+      //   formData.append("id",saved_file_database_id);
+      //   formData.append("input_result",input_result);
+      //   $.ajax({
+      //       url: ipAddress + "/file/update_input_result",
+      //       type: "POST",
+      //       headers:{"Authorization":$api.getStorage("Authorization")},
+      //       data: formData,
+      //       success: function (result) {
+      //         console.log(result);
+      //       }
+      //     })
+      // })
     };
     function selectImage(file) {
         $("#result_list").empty();

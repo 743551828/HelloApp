@@ -73,6 +73,11 @@
     apiready = function(){
         api.parseTapmode();
         $("#login").click(function(){
+          api.showProgress({
+              title: '努力注册中...',
+              text: '先喝杯茶...'
+              // modal: false
+          }); //显示加载进度框
           var test = checkMobile($("#mobile").val());
           if (!test) {
             alert("手机号格错误");
@@ -95,6 +100,7 @@
               data: data,
               traditional: true,
               success: function (result) {
+                api.hideProgress(); //隐藏加载进度框
                 if(result.code==500){
                   api.alert({
                           title: '错误',
