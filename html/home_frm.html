@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+	<style>
+        .aui-card-list {
+            margin-bottom: 0;
+        }
+        #classify-list {
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        #classify-list::-webkit-scrollbar {
+          display: none;
+        }
+        .aui-list .aui-list-item-title {
+            font-size: 0.7rem;
+        }
+        .active{
+          color: #263238
+        }
+        #content_list{
+          overflow-x: hidden;
+          overflow-y: scroll;
+        }
+        #content_list::-webkit-scrollbar {
+          display: none;
+        }
+        img{
+          height: 170px
+        }
+	</style>
+</head>
+<body>
+  <section class="aui-content aui-col-xs-3" id="classify-list">
+      <ul class="aui-list aui-list-noborder" id="genus-ul">
+          <!-- <li class="aui-list-item">
+              <div class="aui-list-item-inner">
+                  <div class="aui-list-item-title">男装</div>
+              </div>
+          </li>
+
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner">
+                  <div class="aui-list-item-title">玩具乐器</div>
+              </div>
+          </li> -->
+      </ul>
+  </section>
+  <section class="aui-content aui-col-xs-9 aui-padded-l-5 aui-padded-r-5" id="content_list">
+        <div class="aui-row aui-row-padded" id="spec-ul"></div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/jquery.min.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/script/ipaddress.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        api.parseTapmode();
+        document.getElementById("classify-list").style.height = api.pageParam.h_h+"px";
+        document.getElementById("content_list").style.height = api.pageParam.h_h+"px"
+        $.ajax({
+            url: ipAddress+"genus/findAll",
+            type: 'get',
+            dataType: 'json',
+            success: function(result) {
+                var genus_list = result.data;
+                for(var i=0;i<genus_list.length;i++){
+                  $("#genus-ul").append("<li class=\"aui-list-item\">\n" +
+            "              <div class=\"aui-list-item-inner\">\n" +
+            "                  <div class=\"aui-list-item-title\" onclick='getSpecByGenusId("+genus_list[i].id+")' name="+genus_list[i].id+">"+genus_list[i].genusNameCh+"</div>\n" +
+            "              </div>\n" +
+            "          </li>")
+                }
+                $.ajax({
+                    url: ipAddress+"spec/findByGenusId",
+                    type: 'get',
+                    dataType: 'json',
+                    data: {"genusId":genus_list[0].id},
+                    success: function(result) {
+                      var spec_list = result.data;
+                      for (var i = 0; i < spec_list.length; i++) {
+                        $("#spec-ul").append("<div class=\"aui-col-xs-6\" onclick='getSpecContent("+spec_list[i].id+")' >\n" +
+            "                <div class=\"aui-card-list\">\n" +
+            "                    <div class=\"aui-card-list-content\">\n" +
+            "                        <img src="+spec_list[i].specImgs+">\n" +
+            "                    </div>\n" +
+            "                    <div class=\"aui-card-list-header aui-font-size-14\">"+spec_list[i].specNameCh+"</div>\n" +
+            "                </div>\n" +
+            "            </div>")
+                      }
+
+                    },
+                    error : function(){
+                      alert("获取数据失败！")
+                    }
+                });
+            },
+            error : function(){
+              alert("获取数据失败！")
+            }
+        });
+
+    };
+    function getSpecByGenusId(genusId){
+      $.ajax({
+          url: ipAddress+"spec/findByGenusId",
+          type: 'get',
+          dataType: 'json',
+          data: {"genusId":genusId},
+          success: function(result) {
+            $("#spec-ul").empty();
+            var spec_list = result.data;
+            for (var i = 0; i < spec_list.length; i++) {
+              $("#spec-ul").append("<div class=\"aui-col-xs-6\" onclick='getSpecContent("+spec_list[i].id+")'>\n" +
+  "                <div class=\"aui-card-list\">\n" +
+  "                    <div class=\"aui-card-list-content\">\n" +
+  "                        <img src="+spec_list[i].specImgs+">\n" +
+  "                    </div>\n" +
+  "                    <div class=\"aui-card-list-header aui-font-size-14\">"+spec_list[i].specNameCh+"</div>\n" +
+  "                </div>\n" +
+  "            </div>")
+            }
+
+          },
+          error : function(){
+            alert("获取数据失败！")
+          }
+      });
+    }
+    function getSpecContent(specId){
+      api.openFrame({
+          name: 'spec_content',
+          url: 'spec_content.html',
+          // bounces: true,
+          rect: {
+              x: 'auto',
+              y: api.pageParam.headerPos_h,
+              w: api.winWidth,
+              h: api.pageParam.h_h
+          },
+          pageParam: {
+            specId: specId
+          }
+      })
+    }
+</script>
+</html>

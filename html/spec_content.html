@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+      .center{
+        text-align: center;
+      }
+      .title{
+        text-align: right;
+      }
+      span{
+        font-size: 20px;
+        color: #666
+      }
+      img{
+        padding: 5px;
+        width: 100%
+      }
+    </style>
+</head>
+<body>
+    <ul>
+      <li ><span class="aui-col-xs-6 title">中文名称 : </span><span class="aui-col-xs-6" id="specNameCh">无</span></li>
+      <li ><span class="aui-col-xs-6 title">英文名称 : </span><span class="aui-col-xs-6" id="specNameEn">无</span></li>
+      <li ><span class="aui-col-xs-6 title">拉丁名称 : </span><span class="aui-col-xs-6" id="specNameLd">无</span></li>
+      <li ><span class="aui-col-xs-6 title">种别名 : </span><span class="aui-col-xs-6" id="specNameOth">无</span></li>
+      <li ><span class="aui-col-xs-6 title">种描述 : </span><span class="aui-col-xs-6" id="specDesc">无</span></li>
+      <li ><img id = "specImgs"></li>
+    </ul>
+</body>
+<script type="text/javascript" src="../script/jquery.min.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/script/ipaddress.js"></script>
+<script type="text/javascript">
+  apiready = function(){
+    $.ajax({
+        url: ipAddress+"spec/findById",
+        type: 'get',
+        dataType: 'json',
+        data: {"id":api.pageParam.specId},
+        success: function(result) {
+            var spec = result.data;
+            if (spec.specNameCh!=null) {
+              $("#specNameCh").text(spec.specNameCh);
+            };
+            if (spec.specNameEn!=null) {
+              $("#specNameEn").text(spec.specNameEn);
+            }
+            if (spec.specNameLd!=null) {
+              $("#specNameLd").text(spec.specNameLd);
+            }
+            if (spec.specNameOth!=null) {
+              $("#specNameOth").text(spec.specNameOth);
+            }
+            if (spec.specDesc!=null) {
+              $("#specDesc").html(spec.specDesc);
+            }
+            $("#specImgs").attr("src",spec.specImgs)
+        }
+      });
+  }
+</script>
+</html>

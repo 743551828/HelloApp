@@ -88,8 +88,14 @@
               $api.setStorage("Authorization",result.data);
               // console.log($api.getStorage("Authorization"));
               api.openWin({
-                  name: 'index',
-                  url: './index_win.html'
+                  name: 'home',
+                  url: './home_win.html',
+                  slidBackEnabled: false,
+                  animation:{
+                    type:"push",
+                    subType:"from_right",
+                    duration:300
+                  }
               });
               break;
           }
