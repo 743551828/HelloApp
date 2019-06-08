@@ -25,6 +25,14 @@
         #feedBack_div{
           padding: 5px
         }
+        .btn-diy{
+          background-color: #263238;
+          color: #ffffff
+        }
+        .container{
+          padding-top: 5px
+        }
+
     </style>
 </head>
 <body>
@@ -32,7 +40,7 @@
 
   <!-- <h1 id="title"></h1> -->
   <div class="row text-center">
-      <button type="button" class="btn btn-lg btn-primary" onclick="$(&#39;#input_file&#39;).click();">选择图片</button>
+      <button type="button" class="btn btn-lg btn-diy" onclick="$(&#39;#input_file&#39;).click();" >选择图片</button>
       <input type="file" class="hidden" onchange="selectImage(this)" id="input_file" accept="image/*" name="file">
       <button type="button" class="btn btn-default btn-lg" id="detect">检 测</button>
   </div>
@@ -40,6 +48,7 @@
   <div class="row">
       <div id="left_image" class="col-lg-6 col-md-6 col-sm-6"></div>
       <ul class="list-group col-lg-6 col-md-6 col-sm-6" id="result_list">
+        <!-- <li class="list-group-item btn-diy"><span class="pull-right ">概率</span> 类别</li> -->
       </ul>
       <!-- <div class="text-center" style="display:none;" id = "feedBack_div">
         <input type="text" class="form-control" name="input_result" placeholder="若检测结果有误，请反馈">
@@ -85,7 +94,7 @@
                   var data = result.data.test_result;
                   // saved_file_database_id = result.data.saved_file_database_id;
                   $("#result_list").empty();
-                  var li = '<li class="list-group-item btn-primary">\n' +
+                  var li = '<li class="list-group-item btn-diy">\n' +
                       '                <span class="pull-right ">概率</span>\n' +
                       '                类别\n' +
                       '            </li>';

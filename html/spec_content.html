@@ -43,6 +43,7 @@
         type: 'get',
         dataType: 'json',
         data: {"id":api.pageParam.specId},
+        headers:{"Authorization":$api.getStorage("Authorization")},
         success: function(result) {
             var spec = result.data;
             if (spec.specNameCh!=null) {

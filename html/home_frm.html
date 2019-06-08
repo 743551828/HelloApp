@@ -67,6 +67,7 @@
             url: ipAddress+"genus/findAll",
             type: 'get',
             dataType: 'json',
+            headers:{"Authorization":$api.getStorage("Authorization")},
             success: function(result) {
                 var genus_list = result.data;
                 for(var i=0;i<genus_list.length;i++){
@@ -81,6 +82,7 @@
                     type: 'get',
                     dataType: 'json',
                     data: {"genusId":genus_list[0].id},
+                    headers:{"Authorization":$api.getStorage("Authorization")},
                     success: function(result) {
                       var spec_list = result.data;
                       for (var i = 0; i < spec_list.length; i++) {
@@ -112,6 +114,7 @@
           type: 'get',
           dataType: 'json',
           data: {"genusId":genusId},
+          headers:{"Authorization":$api.getStorage("Authorization")},
           success: function(result) {
             $("#spec-ul").empty();
             var spec_list = result.data;

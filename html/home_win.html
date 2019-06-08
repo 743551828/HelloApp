@@ -20,13 +20,13 @@
         首页
     </header>
     <footer class="aui-bar aui-bar-tab aui-border-t" id="footer">
-        <div class="aui-bar-tab-item active" id = "home_div" tapmode>
+        <div class="aui-bar-tab-item" id = "home_div" tapmode>
             <i class="aui-iconfont aui-icon-home"></i>
             <div class="aui-bar-tab-label">首页</div>
         </div>
         <div class="aui-bar-tab-item" id = "camera_div" tapmode>
             <i class="aui-iconfont aui-icon-camera"></i>
-            <div class="aui-bar-tab-label">相机</div>
+            <div class="aui-bar-tab-label">检测</div>
         </div>
         <div class="aui-bar-tab-item" id = "mine_div">
             <i class="aui-iconfont aui-icon-my"></i>
@@ -73,9 +73,8 @@ apiready = function(){
               h: api.winHeight-headerPos.h-footerPos.h
           },
           animation: {
-            type:"movein",                //动画类型（详见动画类型常量）
-            subType:"from_right",       //动画子类型（详见动画子类型常量）
-            duration:300                //动画过渡时间，默认300毫秒
+            type:"none",                //动画类型（详见动画类型常量）
+            duration:0                //动画过渡时间，默认300毫秒
           }
       })
       $("#aui-header").text("我的");
@@ -88,12 +87,48 @@ apiready = function(){
         name: 'home_frm',
         url: 'home_frm.html',
         animation: {
-          type:"movein",                //动画类型（详见动画类型常量）
-          subType:"from_left",       //动画子类型（详见动画子类型常量）
-          duration:300                //动画过渡时间，默认300毫秒
+          type:"none",                //动画类型（详见动画类型常量）
+          duration:0                //动画过渡时间，默认300毫秒
         }
       })
       $("#aui-header").text("首页");
+    })
+    $("#camera_div").click(function (){
+          // api.getPicture({
+          //   sourceType: 'camera',
+          //   encodingType: 'jpg',
+          //   mediaValue: 'pic',
+          //   destinationType: 'url',
+          //   allowEdit: true,
+          //   quality: 50,
+          //   targetWidth: 100,
+          //   targetHeight: 100,
+          //   saveToPhotoAlbum: false
+          // }, function(ret, err) {
+          //     if (ret) {
+          //         alert(JSON.stringify(ret));
+          //     } else {
+          //         alert(JSON.stringify(err));
+          //     }
+          // });
+          api.openFrame({
+            name: 'detail_frm',
+            url: 'detail_frm.html',
+            animation: {
+              type:"none",                //动画类型（详见动画类型常量）
+              duration:0                //动画过渡时间，默认300毫秒
+            },
+            rect: {
+                x: 'auto',
+                y: headerPos.h,
+                w: api.winWidth,
+                h: api.winHeight-headerPos.h-footerPos.h
+            },
+            pageParam: {
+              type:"TeaWeed"
+            }
+          })
+          $("#aui-header").text("检测");
     })
 };
 
