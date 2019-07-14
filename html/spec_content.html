@@ -21,6 +21,10 @@
         padding: 5px;
         width: 100%
       }
+      #detail{
+        padding: 2px;
+        overflow-x:scroll;
+      }
     </style>
 </head>
 <body>
@@ -28,9 +32,11 @@
       <li ><span class="aui-col-xs-6 title">中文名称 : </span><span class="aui-col-xs-6" id="specNameCh">无</span></li>
       <li ><span class="aui-col-xs-6 title">英文名称 : </span><span class="aui-col-xs-6" id="specNameEn">无</span></li>
       <li ><span class="aui-col-xs-6 title">拉丁名称 : </span><span class="aui-col-xs-6" id="specNameLd">无</span></li>
-      <li ><span class="aui-col-xs-6 title">种别名 : </span><span class="aui-col-xs-6" id="specNameOth">无</span></li>
-      <li ><span class="aui-col-xs-6 title">种描述 : </span><span class="aui-col-xs-6" id="specDesc">无</span></li>
-      <li ><img id = "specImgs"></li>
+      <li class="center"><span >种别名 </span></li>
+      <li class="center"><span id="specNameOth">无</span></li>
+      <li class="center"><span >种描述 </span></li>
+      <li id="detail"><span id="specDesc"></span></li>
+      <li class="center"><img id = "specImgs"></li>
     </ul>
 </body>
 <script type="text/javascript" src="../script/jquery.min.js"></script>
@@ -46,22 +52,32 @@
         headers:{"Authorization":$api.getStorage("Authorization")},
         success: function(result) {
             var spec = result.data;
-            if (spec.specNameCh!=null) {
+            if (spec.specNameCh == null || spec.specNameCh == "") {
+              $("#specNameCh").text("无");
+            }else {
               $("#specNameCh").text(spec.specNameCh);
             };
-            if (spec.specNameEn!=null) {
+            if (spec.specNameEn == null || spec.specNameEn == "") {
+              $("#specNameEn").text("无");
+            }else {
               $("#specNameEn").text(spec.specNameEn);
-            }
-            if (spec.specNameLd!=null) {
+            };
+            if (spec.specNameLd == null || spec.specNameLd == "") {
+              $("#specNameLd").text("无");
+            }else {
               $("#specNameLd").text(spec.specNameLd);
-            }
-            if (spec.specNameOth!=null) {
+            };
+            if (spec.specNameOth == null || spec.specNameOth == "") {
+              $("#specNameOth").text("无");
+            }else {
               $("#specNameOth").text(spec.specNameOth);
-            }
-            if (spec.specDesc!=null) {
+            };
+            if (spec.specDesc == null || spec.specDesc == "") {
+              $("#specDesc").text("无");
+            }else {
               $("#specDesc").html(spec.specDesc);
-            }
-            $("#specImgs").attr("src",spec.specImgs)
+            };
+            $("#specImgs").attr("src",vr_path+spec.specImgs)
         }
       });
   }

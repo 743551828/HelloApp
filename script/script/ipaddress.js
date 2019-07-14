@@ -1,2 +1,3 @@
-ipAddress = "http://47.104.26.79:7808/"
-// ipAddress = "http://192.168.1.100:8080/"
+ipAddress = "http://47.111.140.91:8081/"
+vr_path = "http://47.111.140.91:8081/file/"
+// ipAddress = "http://192.168.1.108:7808/"
