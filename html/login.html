@@ -73,11 +73,17 @@
   function login(){
     var username = $("#username").val();
     var password = $("#password").val();
+    api.showProgress({
+      title: '登录中...',
+      text: '先喝杯茶...',
+      modal: false
+    });
     $.ajax({
         url: ipAddress+"login",
         type: "POST",
         data: {"userName":username,"password":password},
         success: function (result) {
+          api.hideProgress();
           switch(result.code)
           {
             case 500:

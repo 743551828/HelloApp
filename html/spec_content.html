@@ -21,14 +21,71 @@
         padding: 5px;
         width: 100%
       }
-      #detail{
+      #specDesc{
         padding: 2px;
         overflow-x:scroll;
       }
     </style>
 </head>
 <body>
-    <ul>
+  <div class="aui-content aui-margin-b-15">
+    <ul class="aui-list aui-list-in">
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">中文名称 : </div>
+                <div class="aui-list-item-right" id="specNameCh">无</div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">英文名称 : </div>
+                <div class="aui-list-item-right" id="specNameEn">无</div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">拉丁名称 : </div>
+                <div class="aui-list-item-right" id="specNameLd">无</div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">种别名 : </div>
+                <div class="aui-list-item-right" id="specNameOth">无</div>
+            </div>
+        </li>
+        <!-- <li class="aui-list-item aui-list-item-arrow">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title">种描述 : </div>
+                        <div class="aui-list-item-right"></div>
+                    </div>
+                    <div class="aui-list-item-text aui-ellipsis-2" id="specDesc">
+
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="center"><img id = "specImgs"></li> -->
+    </ul>
+    <ul class="aui-list aui-media-list">
+        <li class="aui-list-item">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title">种描述 : </div>
+                        <!-- <div class="aui-list-item-right">08:00</div> -->
+                    </div>
+                    <div class="aui-list-item-text aui-ellipsis-2" id="specDesc">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="center"><img id = "specImgs"></li>
+    </ul>
+</div>
+    <!-- <ul>
       <li ><span class="aui-col-xs-6 title">中文名称 : </span><span class="aui-col-xs-6" id="specNameCh">无</span></li>
       <li ><span class="aui-col-xs-6 title">英文名称 : </span><span class="aui-col-xs-6" id="specNameEn">无</span></li>
       <li ><span class="aui-col-xs-6 title">拉丁名称 : </span><span class="aui-col-xs-6" id="specNameLd">无</span></li>
@@ -37,13 +94,18 @@
       <li class="center"><span >种描述 </span></li>
       <li id="detail"><span id="specDesc"></span></li>
       <li class="center"><img id = "specImgs"></li>
-    </ul>
+    </ul> -->
 </body>
 <script type="text/javascript" src="../script/jquery.min.js"></script>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/script/ipaddress.js"></script>
 <script type="text/javascript">
   apiready = function(){
+    api.showProgress({
+      title: '登录中...',
+      text: '先喝杯茶...',
+      modal: false
+    });
     $.ajax({
         url: ipAddress+"spec/findById",
         type: 'get',
@@ -77,9 +139,11 @@
             }else {
               $("#specDesc").html(spec.specDesc);
             };
-            $("#specImgs").attr("src",vr_path+spec.specImgs)
+            $("#specImgs").attr("src",vr_path+spec.specImgs);
+
         }
       });
+      api.hideProgress();
   }
 </script>
 </html>

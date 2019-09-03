@@ -63,6 +63,11 @@
         api.parseTapmode();
         document.getElementById("classify-list").style.height = api.pageParam.h_h+"px";
         document.getElementById("content_list").style.height = api.pageParam.h_h+"px"
+        api.showProgress({
+          title: '加载中...',
+          text: '先喝杯茶...',
+          modal: false
+        });
         $.ajax({
             url: ipAddress+"genus/findAll",
             type: 'get',
@@ -106,9 +111,14 @@
               alert("获取数据失败！")
             }
         });
-
+        api.hideProgress();
     };
     function getSpecByGenusId(genusId){
+      api.showProgress({
+        title: '加载中...',
+        text: '先喝杯茶...',
+        modal: false
+      });
       $.ajax({
           url: ipAddress+"spec/findByGenusId",
           type: 'get',
@@ -134,6 +144,7 @@
             alert("获取数据失败！")
           }
       });
+      api.hideProgress();
     }
     function getSpecContent(specId){
       api.openFrame({

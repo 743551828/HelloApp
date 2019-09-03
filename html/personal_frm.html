@@ -84,6 +84,11 @@
 <script type="text/javascript" src="../script/script/ipaddress.js"></script>
 <script type="text/javascript">
   apiready = function(){
+    api.showProgress({
+      title: '加载中...',
+      text: '先喝杯茶...',
+      modal: false
+    });
     $.ajax({
         url: ipAddress+"user/findUser",
         type: 'get',
@@ -96,6 +101,7 @@
             $("#role").text(user.roles[0].roleName);
         }
       })
+      api.hideProgress();
   }
 </script>
 </html>
