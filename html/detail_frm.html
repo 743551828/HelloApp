@@ -15,48 +15,23 @@
     <link rel="stylesheet" type="text/css" href="../css/api.css" />
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
     <style>
-        #left_image img {
-          max-width: 100%;
-          max-height: 600px;
-        }
-        #result_list{
-          padding: 3px
-        }
-        #feedBack_div{
-          padding: 5px
-        }
-        .btn-diy{
-          background-color: #263238;
-          color: #ffffff
-        }
-        .container{
-          padding-top: 5px
-        }
 
     </style>
 </head>
 <body>
-  <div class="container">
+  <div class="headFunctionBar">
+     <span class="lamp" onclick="getLamp()"><img src="../image/close.png"/></span>
+     <span class="tip1">请将脸对准虚线框</span>
+     <span class="lens" onclick="closeCamera()"><img src="../image/lens.png"/></span>
+   </div>
+   <div class="middle">
+   </div>
+   <div class="footFunctionBar">
+     <span id="photograph" onclick="getPhotograph()">
+       <span></span>
+     </span>
+   </div>
 
-  <!-- <h1 id="title"></h1> -->
-  <div class="row text-center">
-      <button type="button" class="btn btn-lg btn-diy" onclick="$(&#39;#input_file&#39;).click();" >选择图片</button>
-      <input type="file" class="hidden" onchange="selectImage(this)" id="input_file" accept="image/*" name="file">
-      <button type="button" class="btn btn-default btn-lg" id="detect">检 测</button>
-  </div>
-  <hr>
-  <div class="row">
-      <div id="left_image" class="col-lg-6 col-md-6 col-sm-6"></div>
-      <ul class="list-group col-lg-6 col-md-6 col-sm-6" id="result_list">
-        <!-- <li class="list-group-item btn-diy"><span class="pull-right ">概率</span> 类别</li> -->
-      </ul>
-      <!-- <div class="text-center" style="display:none;" id = "feedBack_div">
-        <input type="text" class="form-control" name="input_result" placeholder="若检测结果有误，请反馈">
-        <button type="button" class="btn btn-default" id = "feedBack" >反馈提交</button>
-      </div> -->
-  </div>
-
-</div>
 </body>
 </html>
 <script type="text/javascript" src="../script/jquery.min.js"></script>
@@ -64,106 +39,62 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/script/ipaddress.js"></script>
 <script type="text/javascript">
-    apiready = function(){
-      // $("#title").text(api.pageParam.name)
-      // var saved_file_database_id = "";
-      $("#detect").click(function () {
-          if ($('#input_file')[0].files.length == 0) {
-            alert("请添加图片");
-            return
-          }
-          api.showProgress({
-            title: '检测中...',
-            text: '先喝杯茶...',
-            modal: false
-          });
-          var formData = new FormData();
-          var url = "";
-          if (api.pageParam.type=="TeaWeed") {
-            url = ipAddress+"/test/tea_weed"
-          }else if (api.pageParam.type=="bamboo") {
-            url = ipAddress+"/test/bamboo"
-          }
-          for (var i = 0; i < $('#input_file')[0].files.length; i++) {
-              formData.append('file', $('#input_file')[0].files[i]);
-          }
-          $.ajax({
-              url: url,
-              type: "POST",
-              processData: false,
-              contentType: false,
-              headers:{"Authorization":$api.getStorage("Authorization")},
-              data: formData,
-              success: function (result) {
-                if (result.code == 200) {
-                  var data = result.data.test_result;
-                  // saved_file_database_id = result.data.saved_file_database_id;
-                  $("#result_list").empty();
-                  var li = '<li class="list-group-item btn-diy">\n' +
-                      '                <span class="pull-right ">概率</span>\n' +
-                      '                类别\n' +
-                      '            </li>';
-                  for (var i = 0;i<data.length;i++) {
-                      li = li + '<li class="list-group-item">\n' +
-                          '                <span class="pull-right">' + data[i][""+Object.keys(data[i])] + '%</span>\n' +
-                          Object.keys(data[i]) + '</li>';
-                  }
-                  $("#result_list").append(li);
-                  $("#feedBack_div").css("display","block");
-                }else {
-                  alert(result.msg);
-                }
-                api.hideProgress();
-              }
-              // ,error: function (XMLHttpRequest, textStatus, errorThrown) {
-              //     console.log("错误");
-              //     // 状态码
-              //     console.log(XMLHttpRequest.status);
-              //     // 状态
-              //     console.log(XMLHttpRequest.readyState);
-              //     // 错误信息
-              //     console.log(textStatus);
-              // }
-          })
-      });
-      // $("#feedBack").click(function () {
-      //   console.log($("input[name = 'input_result']").val());
-      //   var input_result = $("input[name = 'input_result']").val();
-      //   console.log($("input[name = 'input_result']").val());
-      //   console.log("saved_file_database_id="+saved_file_database_id);
-      //   var formData = new FormData();
-      //   formData.append("_method","PUT");
-      //   formData.append("id",saved_file_database_id);
-      //   formData.append("input_result",input_result);
-      //   $.ajax({
-      //       url: ipAddress + "/file/update_input_result",
-      //       type: "POST",
-      //       headers:{"Authorization":$api.getStorage("Authorization")},
-      //       data: formData,
-      //       success: function (result) {
-      //         console.log(result);
-      //       }
-      //     })
-      // })
-    };
-    function selectImage(file) {
-        $("#result_list").empty();
-        $("#left_image").find("img").remove();
-        if (!file.files) {
-            return;
-        }
-        for (var i = 0; i < file.files.length; i++) {
-            var reader = new FileReader();
-            reader.onload = function (evt) {
-                var image = new Image();
-                image.src = evt.target.result;
-                $("#left_image").append(image);
-                image.addEventListener("load", function () {
-                });
-            };
-            reader.readAsDataURL(file.files[i]);
-        }
-    };
 
+//关闭提示窗口
+function toCloseFrame(){
+  api.closeFrame({
+      name: 'detail_frm'
+  });
+}
+
+
+//拍照
+function getPhotograph(){
+  var FNPhotograph = api.require('FNPhotograph');
+  FNPhotograph.takePhoto({
+      qualityValue: '100',
+      path: 'fs://FNPhotograph',
+      album: true
+  }, function(ret){
+    alert(JSON.stringify(ret));
+  });
+}
+
+//退出相机
+function exitCamera(){
+  toCloseFrame();
+  closeCamera();
+}
+
+//关闭相机
+function closeCamera(){
+  var FNPhotograph = api.require('FNPhotograph');
+  FNPhotograph.closeCameraView(
+  function(ret) {
+      if (ret) {
+          alert(JSON.stringify(ret));
+      }
+  });
+}
+
+//闪光灯
+function getLamp(){
+  var FNPhotograph = api.require('FNPhotograph');
+  FNPhotograph.getFlashlight(function(ret) {
+    alert(JSON.stringify(ret));
+      if (ret.status) {
+        alert(JSON.stringify(ret));
+          if(ret.flashlight=="off"){
+            FNPhotograph.setFlashlight({
+                flashlight: 'on'
+            });
+          }else if(ret.flashlight=="on"){
+            FNPhotograph.setFlashlight({
+                flashlight: 'off'
+            });
+          }
+      }
+  });
+}
 
 </script>

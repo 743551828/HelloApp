@@ -11,7 +11,8 @@
         }
         #camera_div{
           background-color: #263238;
-          border-radius: 5%
+          border-radius: 5px 5px 0 0;
+          color:#fff;
         }
     </style>
 </head>
@@ -94,41 +95,23 @@ apiready = function(){
       $("#aui-header").text("首页");
     })
     $("#camera_div").click(function (){
-          // api.getPicture({
-          //   sourceType: 'camera',
-          //   encodingType: 'jpg',
-          //   mediaValue: 'pic',
-          //   destinationType: 'url',
-          //   allowEdit: true,
-          //   quality: 50,
-          //   targetWidth: 100,
-          //   targetHeight: 100,
-          //   saveToPhotoAlbum: false
-          // }, function(ret, err) {
-          //     if (ret) {
-          //         alert(JSON.stringify(ret));
-          //     } else {
-          //         alert(JSON.stringify(err));
-          //     }
-          // });
           api.openFrame({
-            name: 'detail_frm',
-            url: 'detail_frm.html',
+            name: 'detail_win',
+            url: 'detail_win.html',
             animation: {
               type:"none",                //动画类型（详见动画类型常量）
               duration:0                //动画过渡时间，默认300毫秒
             },
             rect: {
-                x: 'auto',
-                y: headerPos.h,
-                w: api.winWidth,
-                h: api.winHeight-headerPos.h-footerPos.h
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
             },
             pageParam: {
               type:"TeaWeed"
             }
           })
-          $("#aui-header").text("检测");
     })
 };
 

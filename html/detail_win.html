@@ -8,45 +8,200 @@
     <link rel="stylesheet" type="text/css" href="../css/api.css" />
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
     <style>
-        header{ background-color: #FCFCFC; line-height: 42px; height: 42px; position: relative; }
-        header b{ width: 42px; height: 100%; display: inline-block; position: relative; z-index: 1; background: url() no-repeat center; background-size: 70% auto;  }
-        header b.ic-back{ background-image: url(../image/ic-back.png); }
-        header b.ic-check{ background-image: url(../image/ic-check.png); float: right; }
-        header .title{ position: absolute; left: 0; bottom: 0; right: 0;  text-align: center; font-size: 18px;  }
+        *{
+          margin:0;
+          padding:0;
+          list-style: none;
+        }
+        #wrap{
+          background-color: rgba(0,0,0,0.4)
+        }
+        #avatar,.img-word{
+          width: 60%;
+          height: 32%;
+          border:2px solid #fff;
+          margin:100px  auto;
+          background-color: #fff;
+        }
+        .img-word{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          color: #666;
+          background-color: rgba(0,0,0,0.4);
+          border:none;
+        }
+        .wrap-bottom{
+          position: absolute;
+          display: flex;
+          bottom: 20px;
+          width: 100%;
+          height: auto;
+          color: #fff;
+        }
+        .wrap-bottom div{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 34%;
+        }
+        .wrap-bottom .back{
+          width: 30%;
+        }
+        .circle{
+          width: 50px;
+          height: 50px;
+          background-color: #eee;
+          border-radius: 50%;
+          line-height: 50px;
+          font-size: 32px;
+
+        }
+        .i-back{
+          display: inline-block;
+          width: 65px;
+          height: 65px;
+          background-image: url("../image/back.png");
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: 70px;
+        }
+
     </style>
 </head>
 <body>
     <div id="wrap" class="flex-wrap flex-vertical" >
-        <header class="border-b" >
-            <b tapmode="hover" onclick="api.closeWin();" class="ic-back"></b>
-            <div class="title"></div>
-        </header>
-        <div id="main" class="flex-con" >
+          <div class="img-word">
+            请添加需要检测的图片
+          </div>
+          <img src="" id="avatar"/>
 
-        </div>
+          <div class="wrap-bottom">
+              <div class="photo" onclick="getPicture(1);">拍摄</div>
+              <div class="back">
+                  <i class="i-back"></i>
+              </div>
+              <div class="album"  onclick="getPicture(2);">相册</div>
+          </div>
     </div>
 </body>
 </html>
+<script type="text/javascript" src="../script/jquery.min.js"></script>
+<script type="text/javascript" src="../script/bootstrap.js"></script>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/script/ipaddress.js"></script>
 <script type="text/javascript">
-    apiready = function(){
-        $api.fixStatusBar( $api.dom('header') );
-        $api.dom('.title').innerHTML = api.pageParam.name;
-        api.openFrame({
-            name: 'detail',
-            url: './detail_frm.html',
-            rect: {
-                x: 0,
-                y: $api.dom('header').offsetHeight,
-                w: api.winWidth,
-                h: $api.dom('#main').offsetHeight
-            },
-            bounces : true,
-            pageParam: {
-                name: api.pageParam.name,
-                type: api.pageParam.type
-           }
+apiready = function(){
+    $(".i-back").click(function() {
+      api.closeWin();
+      api.openWin({
+          name: 'home_win',
+          url: 'home_win.html'
+      })
+    })
+    $("#avatar").css("display","none");
+    getPicture(1);
+}
+
+
+
+//获取相机还是相册
+var imgSrc="";
+function getPicture(sourceType) {
+    var user=$api.getStorage('username');
+    if(sourceType==1){ // 拍照
+        //获取一张图片
+        api.getPicture({
+            sourceType: 'camera',  //拍照
+            encodingType: 'png',
+            mediaValue: 'pic',
+            allowEdit : true,
+            //destinationType: 'base64',  //返回base64地址
+            quality: 90,
+            saveToPhotoAlbum: true
+        }, function(ret, err) {
+            //var imgSrc = ret.base64Data;  如果是base64，要用这个属性获取地址
+            // 获取拍照数据并处理
+            if (ret) {
+                imgSrc = ret.data;
+                if (imgSrc != "") {
+
+                    var ele=$api.dom('#avatar');
+                    $("#avatar").css("display","block");
+                    $(".img-word").css("display","none");
+                    $api.attr(ele,'src',imgSrc);
+                    //最后一步
+                    //ajax
+                    api.ajax({
+                        url: 'http://192.168.0.107:8080/jiekou/cim.action',
+                        method: 'post',
+                        data: {
+                            values: {
+                                name: user
+                            },
+                            files: {
+                                file: imgSrc
+                            }
+                        }
+                    },function(ret, err){
+                        if (ret) {
+                          alert("上传成功");
+                        }
+                    });
+                }else{
+                  $("#avatar").css("display","none");
+                  $(".img-word").css("display","block");
+                }
+            }
         });
-    };
+    }else if(sourceType==2){ // 从相册中选择
+      api.getPicture({
+          sourceType: 'album', //从相册中选择
+          encodingType: 'jpg',
+          mediaValue: 'pic',
+          allowEdit: false,
+          //destinationType: 'base64',  //返回base64地址
+          quality: 90,
+          saveToPhotoAlbum: true
+      }, function(ret, err) {
+          // 获取拍照数据并处理
+            //var imgSrc = ret.base64Data;  如果是base64，要用这个属性获取地址
+            if (ret) {
+                  imgSrc = ret.data;
+                if (imgSrc != "") {
+                    var ele=$api.dom('#avatar');
+                    $("#avatar").css("display","block");
+                    $(".img-word").css("display","none");
+                    $api.attr(ele,'src',imgSrc);
+                    //最后一步
+                    // ajax
+                    api.ajax({
+                        url: 'http://192.168.0.107:8080/jiekou/cim.action',
+                        method: 'post',
+                        data: {
+                            values: {
+                                name: user
+                            },
+                            files: {
+                                file: imgSrc
+                            }
+                        }
+                    },function(ret, err){
+                        if (ret) {
+                          alert("上传成功");
+                        }
+                    });
+                }else{
+                  $("#avatar").css("display","none");
+                  $(".img-word").css("display","block");
+                }
+            }
+      });
+    }
+
+}
+
+
+
 </script>
